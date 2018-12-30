@@ -1,0 +1,98 @@
+﻿<Window x:Class="Vintereksamen_2017_2018_opgave_1.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Vintereksamen_2017_2018_opgave_1"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Window.DataContext>
+        <local:Commands />
+    </Window.DataContext>
+
+    <Window.Resources>
+        <local:Converter x:Key="Converter"></local:Converter>
+
+        <Style TargetType="{x:Type Label}">
+            <Style.Setters>
+                <Setter Property="Foreground" Value="black" />
+                <Setter Property="Margin" Value="5"/>
+                <Setter Property="HorizontalAlignment" Value="Right"/>
+            </Style.Setters>
+        </Style>
+
+        <Style TargetType="{x:Type TextBox}">
+            <Style.Setters>
+                <Setter Property="Foreground" Value="black" />
+                <Setter Property="Margin" Value="5"/>
+            </Style.Setters>
+        </Style>
+
+        <Style TargetType="{x:Type Button}">
+            <Style.Setters>
+                <Setter Property="Foreground" Value="black" />
+                <Setter Property="Margin" Value="5"/>
+            </Style.Setters>
+        </Style>
+    </Window.Resources>
+
+    <Grid ShowGridLines="true">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Column="0">
+            <Grid ShowGridLines="true">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+
+                <Label Content="Product number:" Grid.Row="0" Grid.Column="0"></Label>
+                <Label Content="Product name:" Grid.Row="1" Grid.Column="0"></Label>
+                <Label Content="Product price:" Grid.Row="2" Grid.Column="0"></Label>
+
+                <TextBox Name="productNumberTB" Text="{Binding ElementName=ProductsDg, Mode=OneWay, Path=SelectedItem.ProductNumber}" Grid.Row="0" Grid.Column="1"></TextBox>
+                <TextBox Name="productNameTB" Text="{Binding ElementName=ProductsDg, Mode=OneWay, Path=SelectedItem.Name}" Grid.Row="1" Grid.Column="1"></TextBox>
+                <TextBox Name="productPriceTB" Text="{Binding ElementName=ProductsDg, Mode=OneWay, Path=SelectedItem.Price}" Grid.Row="2" Grid.Column="1"></TextBox>
+
+            </Grid>
+            <Button Content="Add product" Grid.Row="4" Grid.Column="1"  Command="{Binding AddProductCommand}">
+                <Button.CommandParameter>
+                    <MultiBinding Converter="{StaticResource Converter}">
+                        <Binding Path="Text" ElementName="productNumberTB"></Binding>
+                        <Binding Path="Text" ElementName="productNameTB"></Binding>
+                        <Binding Path="Text" ElementName="productPriceTB"></Binding>
+                    </MultiBinding>
+                </Button.CommandParameter>
+            </Button>
+            <Button Content="Update product" Command="{Binding UpdateProductCommand}">
+                <Button.CommandParameter>
+                    <MultiBinding Converter="{StaticResource Converter}">
+                        <Binding Path="Text" ElementName="productNumberTB"></Binding>
+                        <Binding Path="Text" ElementName="productNameTB"></Binding>
+                        <Binding Path="Text" ElementName="productPriceTB"></Binding>
+                    </MultiBinding>
+                </Button.CommandParameter>
+            </Button>
+            <Button Content="Delete product" Command="{Binding DeleteProductCommand}" CommandParameter="{Binding ElementName=ProductsDg, Path=SelectedItem}"></Button>
+            <Button Content="Create order" Command="{Binding CreateOrderBtnCommand}"></Button>
+
+        </StackPanel>
+
+        <DataGrid IsReadOnly="True" GridLinesVisibility="Horizontal" Grid.Row="0" Grid.Column="1" x:Name="ProductsDg" IsSynchronizedWithCurrentItem="True" HeadersVisibility="Column" AutoGenerateColumns="False" ItemsSource="{Binding Products}">
+
+            <DataGrid.Columns>
+                <DataGridTextColumn x:Name ="ProductNumberId" Header="Product number" Binding="{Binding Path='ProductNumber'}"></DataGridTextColumn>
+                <DataGridTextColumn x:Name ="ProductNameId" Header="Product name" Binding="{Binding Path='Name'}"></DataGridTextColumn>
+                <DataGridTextColumn x:Name ="ProductPriceId" Header="Product price" Binding="{Binding Path='Price'}"></DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Window>
